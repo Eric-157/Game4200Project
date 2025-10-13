@@ -13,9 +13,16 @@ public class ProjectileBehavior : MonoBehaviour
     }
 
     // Update is called once per frame
-    void OnCollisionEnter(Collision collision) // Need help making exceptions
+    void OnCollisionEnter(Collision collision)
     {
-        Destroy(collision.gameObject); // Destroys whatever the projectile hit (can include the player, currently)
-        Destroy(gameObject); // Destroys the projectile
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(collision.gameObject); // Destroys target
+            Destroy(gameObject); // Destroys the projectile
+        }
+        else
+        {
+            Destroy(gameObject); // Destroy the projectile
+        }
     }
 }
