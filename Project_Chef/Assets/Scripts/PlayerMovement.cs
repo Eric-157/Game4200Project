@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        _moveDirection = move.action.ReadValue<Vector3>();
+        _moveDirection = move.action.ReadValue<Vector3>().normalized;
     }
 
     private void FixedUpdate()
