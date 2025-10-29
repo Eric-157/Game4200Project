@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 54745548}
   - component: {fileID: 54745547}
   - component: {fileID: 54745551}
-  - component: {fileID: 54745553}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -229,7 +228,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60.000004
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -255,11 +254,10 @@ Transform:
   m_GameObject: {fileID: 54745546}
   serializedVersion: 2
   m_LocalRotation: {x: -0.23173617, y: -0.010851856, z: 0.0076737185, w: -0.97268796}
-  m_LocalPosition: {x: -5, y: 4.2, z: -1}
+  m_LocalPosition: {x: -4.94, y: 5.52, z: -1.543}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 968714654}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 38.086, y: 0, z: 0}
 --- !u!114 &54745551
@@ -296,45 +294,6 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &54745553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 54745546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ExcludedPropertiesInInspector:
-  - m_Script
-  m_LockStageInInspector: 
-  m_StreamingVersion: 20170927
-  m_Priority: 10
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
-  m_Lens:
-    FieldOfView: 40
-    OrthographicSize: 10
-    NearClipPlane: 0.1
-    FarClipPlane: 5000
-    Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
-    GateFit: 2
-    FocusDistance: 10
-    m_SensorSize: {x: 1, y: 1}
-  m_Transitions:
-    m_BlendHint: 0
-    m_InheritPosition: 0
-    m_OnCameraLive:
-      m_PersistentCalls:
-        m_Calls: []
-  m_LegacyBlendHint: 0
-  m_ComponentOwner: {fileID: 968714654}
 --- !u!1001 &136767229
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -408,11 +367,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_Side (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 2115431990657517226, guid: 93abe2060acf0d346b6f3e0e28cdf8a4,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -485,11 +439,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Beam_Corner (6)
       objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -561,11 +510,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Beam_Corner (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -707,11 +651,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Beam_Corner (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -771,6 +710,7 @@ GameObject:
   - component: {fileID: 653452388}
   - component: {fileID: 653452395}
   - component: {fileID: 653452397}
+  - component: {fileID: 653452394}
   - component: {fileID: 653452386}
   - component: {fileID: 653452385}
   - component: {fileID: 653452384}
@@ -1000,6 +940,18 @@ Transform:
   - {fileID: 2052565996}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 360, z: 0}
+--- !u!114 &653452394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653452383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2865d2b743d004448198b64b6fead51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &653452395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1129,11 +1081,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_Back (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 6515733132938224466, guid: d6fe2005fabd9a14490a18479094704d,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1205,11 +1152,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Beam_Corner (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1361,11 +1303,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_Side (6)
       objectReference: {fileID: 0}
-    - target: {fileID: 2115431990657517226, guid: 93abe2060acf0d346b6f3e0e28cdf8a4,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1437,11 +1374,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Beam_Corner (10)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1593,11 +1525,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_Side (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 2115431990657517226, guid: 93abe2060acf0d346b6f3e0e28cdf8a4,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1704,11 +1631,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Beam_Corner (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1718,50 +1640,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1640126584}
   m_SourcePrefab: {fileID: 100100000, guid: 859b09fc59b724f41a193979ebf046c5, type: 3}
---- !u!1 &968714653
-GameObject:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 968714654}
-  - component: {fileID: 968714655}
-  m_Layer: 0
-  m_Name: cm
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &968714654
-Transform:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 968714653}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.23173617, y: 0.010851856, z: -0.0076737185, w: -0.97268796}
-  m_LocalPosition: {x: 4.954834, y: -4.1325436, z: 3.9530444}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 54745550}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &968714655
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 968714653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &993471441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1824,11 +1702,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Beam_Corner (5)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1945,11 +1818,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wall_Side (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115431990657517226, guid: 93abe2060acf0d346b6f3e0e28cdf8a4,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2169,11 +2037,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_Side (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 2115431990657517226, guid: 93abe2060acf0d346b6f3e0e28cdf8a4,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2245,11 +2108,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Beam_Corner (9)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2332,11 +2190,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Wall_Back (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6515733132938224466, guid: d6fe2005fabd9a14490a18479094704d,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2477,11 +2330,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Beam_Corner (7)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3015,11 +2863,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_Back (2)
       objectReference: {fileID: 0}
-    - target: {fileID: 6515733132938224466, guid: d6fe2005fabd9a14490a18479094704d,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3102,11 +2945,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall_Side (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 2115431990657517226, guid: 93abe2060acf0d346b6f3e0e28cdf8a4,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3126,7 +2964,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1724302220}
   - component: {fileID: 1724302219}
-  - component: {fileID: 1724302221}
   m_Layer: 0
   m_Name: Virtual Camera
   m_TagString: Untagged
@@ -3182,27 +3019,13 @@ Transform:
   m_GameObject: {fileID: 1724302218}
   serializedVersion: 2
   m_LocalRotation: {x: -0.23173617, y: -0.010851856, z: 0.0076737185, w: -0.97268796}
-  m_LocalPosition: {x: -5, y: 4.2, z: -1}
+  m_LocalPosition: {x: -4.94, y: 5.52, z: -1.543}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1589397381}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 26.807, y: 1.127, z: -0.635}
---- !u!114 &1724302221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1724302218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8132a3ab12b96a9498f978e61359ee6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 653452393}
-  wallTag: Wall
 --- !u!1 &1730088075
 GameObject:
   m_ObjectHideFlags: 0
@@ -3371,11 +3194,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Beam_Corner (8)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3744683503304779286, guid: 859b09fc59b724f41a193979ebf046c5,
-        type: 3}
-      propertyPath: m_TagString
-      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

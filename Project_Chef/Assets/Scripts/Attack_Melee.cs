@@ -25,18 +25,8 @@ public class Attack_Melee : MonoBehaviour
     {
         var projectile = Instantiate(projectileMeleePrefab, projectileMeleeSpawnPoint.position, projectileMeleeSpawnPoint.rotation);
 
-        // Pass player damage dynamically
-        var damageComp = projectile.GetComponent<ProjectileBehavior>();
-        if (damageComp != null)
-        {
-            var playerStats = GetComponent<PlayerStats>();
-            if (playerStats != null)
-                damageComp.damage = playerStats.CalculateAttackDamage();
-        }
-
         yield return new WaitForSeconds(1);
         isAttacking = false;
     }
-
 
 }
