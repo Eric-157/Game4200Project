@@ -3752,12 +3752,12 @@ PrefabInstance:
     - target: {fileID: 3476149768913602756, guid: 901da3038c1a0bd47be490ff8212151c,
         type: 3}
       propertyPath: spacing
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3476149768913602756, guid: 901da3038c1a0bd47be490ff8212151c,
         type: 3}
       propertyPath: horizontal
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3476149768913602756, guid: 901da3038c1a0bd47be490ff8212151c,
         type: 3}
@@ -3767,7 +3767,7 @@ PrefabInstance:
     - target: {fileID: 3476149768913602756, guid: 901da3038c1a0bd47be490ff8212151c,
         type: 3}
       propertyPath: spawnDelay
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3476149768913602756, guid: 901da3038c1a0bd47be490ff8212151c,
         type: 3}
