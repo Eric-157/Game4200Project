@@ -1,46 +1,44 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-//script taken from this tutorial on YouTube: https://www.youtube.com/watch?v=ONlMEZs9Rgw
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
     public Rigidbody rb;
+    private Vector3 moveDirection;
 
-    public float moveSpeed;
-
-    private Vector3 _moveDirection;
-
+    [Header("Input")]
     public InputActionReference move;
     public InputActionReference attack;
 
+    [Header("Player Systems")]
+    public PlayerStats stats;
+    public PlayerCombat combat;
+
+    private void Awake()
+    {
+        if (!rb) rb = GetComponent<Rigidbody>();
+        if (stats == null) stats = GetComponent<PlayerStats>();
+        if (combat == null) combat = GetComponent<PlayerCombat>();
+    }
 
     private void Update()
     {
-        _moveDirection = move.action.ReadValue<Vector3>().normalized;
+        Vector2 input = move.action.ReadValue<Vector2>();
+        moveDirection = new Vector3(input.x, 0f, input.y).normalized;
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector3(_moveDirection.x * moveSpeed, 0,  _moveDirection.z * moveSpeed);
+        rb.velocity = moveDirection * stats.moveSpeed;
     }
 
-    private void OnEnable()
+    private void OnEnable() => attack.action.started += Attack;
+    private void OnDisable() => attack.action.started -= Attack;
+
+    private void Attack(InputAction.CallbackContext ctx)
     {
-        attack.action.started += Attack;
+        combat?.ExecuteAttack();
     }
-
-    private void OnDisable()
-    {
-        attack.action.started -= Attack;
-    }
-
-    private void Attack(InputAction.CallbackContext obj)
-    {
-        Debug.Log("You executed an attack!");
-    }
-
 }
