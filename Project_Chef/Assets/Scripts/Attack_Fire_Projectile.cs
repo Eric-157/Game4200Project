@@ -29,6 +29,16 @@ public class Attack_Fire_Projectile : MonoBehaviour
     private IEnumerator ExecuteRangedAttack()
     {
         var projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
+
+        // Pass player damage dynamically
+        var damageComp = projectile.GetComponent<ProjectileBehavior>();
+        if (damageComp != null)
+        {
+            var playerStats = GetComponent<PlayerStats>();
+            if (playerStats != null)
+                damageComp.damage = playerStats.CalculateAttackDamage(); // or just playerStats.damage
+        }
+
         projectile.GetComponent<Rigidbody>().velocity = projectileSpawnPoint.forward * projectileSpeed;
         yield return new WaitForSeconds(1);
         isFiring = false;

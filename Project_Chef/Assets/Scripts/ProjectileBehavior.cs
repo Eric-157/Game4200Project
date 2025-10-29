@@ -1,28 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-// Script in reference to this video: https://www.youtube.com/watch?v=EwiUomzehKU
 
 public class ProjectileBehavior : MonoBehaviour
 {
-    public float life = 3;
-    void Awake()
+    [Header("Damage Settings")]
+    public float damage = 10f;            // Default damage value (override per prefab)
+    public float lifetime = 3f;           // Destroy after X seconds
+    public LayerMask enemyLayer;          // Assign in Inspector for clarity
+
+    private void Start()
     {
-        Destroy(gameObject, life);
+        // Auto-destroy so projectiles don't linger forever
+        Destroy(gameObject, lifetime);
     }
 
-    // Update is called once per frame
-    void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        // Only interact with enemies
+        if (((1 << other.gameObject.layer) & enemyLayer) == 0) return;
+
+        Enemy enemy = other.GetComponent<Enemy>();
+        if (enemy != null)
         {
-            Destroy(collision.gameObject); // Destroys target
-            Destroy(gameObject); // Destroys the projectile
-        }
-        else
-        {
-            Destroy(gameObject); // Destroy the projectile
+            enemy.TakeDamage(damage);
+            Destroy(gameObject); // destroy projectile after hit
         }
     }
 }
