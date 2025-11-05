@@ -8,4 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EricStuff.unity
     guid: 31d3d28d0a48d47459fac6273176ce78
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 072c185dfb14ad542b5fc476633bf8ea,
+      type: 2}

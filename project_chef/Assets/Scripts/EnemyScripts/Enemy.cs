@@ -37,6 +37,7 @@ public class Enemy : MonoBehaviour
             GameObject p = GameObject.FindGameObjectWithTag("Player");
             if (p != null) Player = p.transform;
         }
+        EnemyManager.Instance?.RegisterEnemy();
     }
 
     private void FixedUpdate()
@@ -80,5 +81,11 @@ public class Enemy : MonoBehaviour
     public void Attack()
     {
         Combat?.ExecuteAttack(this);
+    }
+
+    private void OnDestroy()
+    {
+        if (EnemyManager.Instance != null)
+            EnemyManager.Instance.UnregisterEnemy();
     }
 }
