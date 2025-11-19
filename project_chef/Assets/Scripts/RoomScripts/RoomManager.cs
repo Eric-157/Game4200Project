@@ -1,6 +1,5 @@
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class RoomData
@@ -12,9 +11,15 @@ public class RoomData
 public class RoomManager : MonoBehaviour
 {
     public static RoomManager Instance;
+
+    [Header("Room Prefabs")]
+    public GameObject[] roomPrefabs;
+
+    private GameObject currentRoomInstance;
     private string filePath;
 
     private RoomData roomData;
+    public static System.Action OnRoomChanged;
 
     private void Awake()
     {
@@ -31,6 +36,14 @@ public class RoomManager : MonoBehaviour
 
         filePath = Path.Combine(Application.persistentDataPath, "RoomData.json");
         LoadRoomData();
+    }
+
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            GenerateNextRoom(roomData.roomID);
+        }
     }
 
     public void LoadRoomData()
@@ -55,13 +68,35 @@ public class RoomManager : MonoBehaviour
 
     public void GenerateNextRoom(int nextRoomID)
     {
-        // Update data
         roomData.roomID = nextRoomID;
         roomData.roomsVisited++;
         SaveRoomData();
 
-        // Create or load a new scene
-        SceneManager.LoadScene("Room_" + nextRoomID);
+        if (currentRoomInstance != null)
+            Destroy(currentRoomInstance);
+
+        GameObject prefab = roomPrefabs[nextRoomID];
+        currentRoomInstance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+
+        MovePlayerToRoomSpawn();
+        OnRoomChanged.Invoke();
+    }
+
+    private void MovePlayerToRoomSpawn()
+    {
+        Transform player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        Transform spawn = currentRoomInstance.transform.Find("SpawnPoint");
+
+        if (spawn != null)
+        {
+            player.position = spawn.position;
+            player.rotation = spawn.rotation;
+        }
+        else
+        {
+            Debug.LogWarning("Room prefab missing a SpawnPoint object!");
+        }
     }
 
     public int GetCurrentRoomID() => roomData.roomID;

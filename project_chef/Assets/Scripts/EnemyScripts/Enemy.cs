@@ -37,7 +37,9 @@ public class Enemy : MonoBehaviour
             GameObject p = GameObject.FindGameObjectWithTag("Player");
             if (p != null) Player = p.transform;
         }
-        EnemyManager.Instance?.RegisterEnemy();
+        GameManager.Instance.RegisterEnemy();
+        if (GameManager.Instance != null)
+            GameManager.Instance.RegisterEnemy();
     }
 
     private void FixedUpdate()
@@ -75,6 +77,8 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         rb.velocity = Vector3.zero;
+        if (GameManager.Instance != null)
+            GameManager.Instance.UnregisterEnemy();
         Destroy(gameObject);
     }
 
@@ -85,7 +89,7 @@ public class Enemy : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (EnemyManager.Instance != null)
-            EnemyManager.Instance.UnregisterEnemy();
+        if (GameManager.Instance != null)
+            GameManager.Instance.UnregisterEnemy();
     }
 }

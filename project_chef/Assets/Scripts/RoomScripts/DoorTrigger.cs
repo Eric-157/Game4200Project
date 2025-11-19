@@ -1,25 +1,62 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DoorTrigger : MonoBehaviour
 {
+    [Header("Door Settings")]
     public bool isLocked = true;
-    public int nextRoomID = 2; // You’ll define this via your custom logic later
+    public int nextRoomID;
+
     private bool playerInRange;
+
 
     private void Update()
     {
-        if (playerInRange && !isLocked && Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            int newRoomID = nextRoomID;
-
-            // Optional: Custom logic example
-            int roomsVisited = RoomManager.Instance.GetRoomsVisited();
-            if (roomsVisited % 5 == 0)
-                newRoomID = 99; // special room example
-
-            RoomManager.Instance.GenerateNextRoom(newRoomID);
+            int desiredRoomID = DetermineNextRoomID();
+            GameManager.Instance.GenerateRoomByIndex(desiredRoomID);
         }
+
+        if (!playerInRange || isLocked)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            int desiredRoomID = DetermineNextRoomID();
+            GameManager.Instance.GenerateRoomByIndex(desiredRoomID);
+        }
+    }
+
+
+    private int DetermineNextRoomID()
+    {
+        int roomsVisited = GameManager.Instance.roomsVisited;
+        nextRoomID = Random.Range(0, GameManager.Instance.roomPrefabs.Count);
+
+        // Insert your custom logic here
+        // Example: every 5 rooms → special room
+        if (roomsVisited > 0 && roomsVisited % 5 == 0)
+        {
+            var gm = GameManager.Instance;
+            if (gm == null)
+            {
+                Debug.LogWarning("DoorTrigger: GameManager.Instance is null — cannot pick random room. Using configured nextRoomID.");
+                return nextRoomID;
+            }
+
+            if (gm.roomPrefabs == null || gm.roomPrefabs.Count == 0)
+            {
+                Debug.LogWarning("DoorTrigger: GameManager.roomPrefabs is not set or empty — cannot pick random room. Using configured nextRoomID.");
+                return nextRoomID;
+            }
+
+            // Pick a random valid index from available prefabs
+            //int randomIndex = Random.Range(0, gm.roomPrefabs.Count);
+            Debug.Log("Random room index selected: " + nextRoomID);
+            return nextRoomID;
+        }
+
+        return nextRoomID;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -37,6 +74,5 @@ public class DoorTrigger : MonoBehaviour
     public void UnlockDoor()
     {
         isLocked = false;
-        // Optional: door open animation, light color change, etc.
     }
 }
