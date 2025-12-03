@@ -136,6 +136,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3750067848428190728, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+        type: 3}
+      propertyPath: CurrentAttack
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3750067848428190728, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+        type: 3}
+      propertyPath: smashHitboxPrefab
+      value: 
+      objectReference: {fileID: 7628665473494181445, guid: de455d8595d2e3b4690d840f2d83180d,
+        type: 3}
     - target: {fileID: 3826247271566483660, guid: a0d720789f7d50e4f82e86f8218ff4dc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -186,11 +197,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3903188897010682643, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4638300590151802466, guid: a0d720789f7d50e4f82e86f8218ff4dc,
         type: 3}
       propertyPath: playerCam
       value: 
       objectReference: {fileID: 1362183747}
+    - target: {fileID: 4928228235619881289, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.775
+      objectReference: {fileID: 0}
     - target: {fileID: 5171577287362871138, guid: a0d720789f7d50e4f82e86f8218ff4dc,
         type: 3}
       propertyPath: field of view
@@ -224,6 +245,11 @@ PrefabInstance:
     - target: {fileID: 6218032765173836559, guid: a0d720789f7d50e4f82e86f8218ff4dc,
         type: 3}
       propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6339224048923146663, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8858856595543959998, guid: a0d720789f7d50e4f82e86f8218ff4dc,
