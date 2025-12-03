@@ -4,59 +4,58 @@ public class DoorTrigger : MonoBehaviour
 {
     [Header("Door Settings")]
     public bool isLocked = true;
-    public int nextRoomID;
+    public int nextRoomID = 2;
 
     private bool playerInRange;
 
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        // Check if door is locked, or if it should remain locked because enemies are still alive
+        var gm = GameManager.Instance;
+        bool shouldBeLocked = isLocked && (gm != null && gm.GetEnemiesAlive() > 0);
+
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            int desiredRoomID = DetermineNextRoomID();
-            GameManager.Instance.GenerateRoomByIndex(desiredRoomID);
+            // For testing: reload current room
+            if (gm != null)
+            {
+                gm.TransitionToRoom(gm.currentRoomID);
+            }
         }
 
-        if (!playerInRange || isLocked)
+        if (!playerInRange || shouldBeLocked)
             return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             int desiredRoomID = DetermineNextRoomID();
-            GameManager.Instance.GenerateRoomByIndex(desiredRoomID);
+
+            // Use GameManager's fade transition instead of direct room generation
+            if (gm != null)
+            {
+                gm.TransitionToRoom(desiredRoomID);
+            }
         }
+
+
     }
 
 
     private int DetermineNextRoomID()
     {
-        int roomsVisited = GameManager.Instance.roomsVisited;
-        nextRoomID = Random.Range(0, GameManager.Instance.roomPrefabs.Count);
-
-        // Insert your custom logic here
-        // Example: every 5 rooms → special room
-        if (roomsVisited > 0 && roomsVisited % 5 == 0)
+        var gm = GameManager.Instance;
+        // Prefer a random next room if the GameManager has room prefabs
+        if (gm != null && gm.roomPrefabs != null && gm.roomPrefabs.Count > 0)
         {
-            var gm = GameManager.Instance;
-            if (gm == null)
-            {
-                Debug.LogWarning("DoorTrigger: GameManager.Instance is null — cannot pick random room. Using configured nextRoomID.");
-                return nextRoomID;
-            }
-
-            if (gm.roomPrefabs == null || gm.roomPrefabs.Count == 0)
-            {
-                Debug.LogWarning("DoorTrigger: GameManager.roomPrefabs is not set or empty — cannot pick random room. Using configured nextRoomID.");
-                return nextRoomID;
-            }
-
-            // Pick a random valid index from available prefabs
-            //int randomIndex = Random.Range(0, gm.roomPrefabs.Count);
-            Debug.Log("Random room index selected: " + nextRoomID);
-            return nextRoomID;
+            Debug.Log("Random room selected: " + nextRoomID);
+            return Random.Range(0, gm.roomPrefabs.Count);
         }
-
-        return nextRoomID;
+        else
+        {
+            Debug.Log("Random room selected: " + nextRoomID);
+            return Random.Range(0, gm.roomPrefabs.Count);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

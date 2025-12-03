@@ -231,7 +231,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerStuff
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4638300590151802466, guid: a0d720789f7d50e4f82e86f8218ff4dc, type: 3}
     m_RemovedGameObjects:
     - {fileID: 454924129255672280, guid: a0d720789f7d50e4f82e86f8218ff4dc, type: 3}
     - {fileID: 8742589261242755025, guid: a0d720789f7d50e4f82e86f8218ff4dc, type: 3}
@@ -240,11 +241,90 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1362183743}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 805004923449090108, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+        type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 780039677}
   m_SourcePrefab: {fileID: 100100000, guid: a0d720789f7d50e4f82e86f8218ff4dc, type: 3}
+--- !u!1 &580462345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 580462347}
+  - component: {fileID: 580462346}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &580462346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580462345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00d69b5e1f69d464384ec3e9752ef40b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeDuration: 0.5
+--- !u!4 &580462347
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580462345}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -19.191635, y: -30.32569, z: 42.395733}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &743476990 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3826247271566483660, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 85492059}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &780039666 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 805004923449090108, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 85492059}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &780039677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 780039666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15454771c5ce24b46a337123632b801f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCam: {fileID: 1362183747}
+  aimTransform: {fileID: 1649553576}
+  animator: {fileID: 0}
+  facingParam: Facing
+  spriteRenderer: {fileID: 1016269102}
+  facingSprites: []
+--- !u!212 &1016269102 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 3150949084477847010, guid: a0d720789f7d50e4f82e86f8218ff4dc,
     type: 3}
   m_PrefabInstance: {fileID: 85492059}
   m_PrefabAsset: {fileID: 0}
@@ -545,6 +625,14 @@ MonoBehaviour:
   wallTag: Wall
   plane: 0
   smoothTime: 0.08
+  debugLogs: 1
+  allowUnlimitedBack: 1
+--- !u!4 &1649553576 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4928228235619881289, guid: a0d720789f7d50e4f82e86f8218ff4dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 85492059}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1857655263
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,6 +788,8 @@ MonoBehaviour:
   - {fileID: 5884083830994718349, guid: e2cae04054a2a114ea8d6b0f16ed605f, type: 3}
   - {fileID: 5001386594969873482, guid: e60ff242c591850488f34aa97b4ed28d, type: 3}
   player: {fileID: 0}
+  spawnDeadzoneDistance: 1
+  spawnValidationTimeout: 2
 --- !u!4 &1905005887
 Transform:
   m_ObjectHideFlags: 0
@@ -722,3 +812,4 @@ SceneRoots:
   - {fileID: 1857655265}
   - {fileID: 1905005887}
   - {fileID: 85492059}
+  - {fileID: 580462347}
