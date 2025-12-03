@@ -6600,10 +6600,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2699660855746236974, guid: 901da3038c1a0bd47be490ff8212151c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3476149768913602756, guid: 901da3038c1a0bd47be490ff8212151c,
         type: 3}
       propertyPath: spawnDelay
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3476149768913602756, guid: 901da3038c1a0bd47be490ff8212151c,
+        type: 3}
+      propertyPath: spawnOnStart
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6891531297723422115, guid: 901da3038c1a0bd47be490ff8212151c,
         type: 3}

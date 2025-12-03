@@ -23,6 +23,14 @@ public class PlayerAimController : MonoBehaviour
     [Tooltip("Optional sprites in order: NW, NE, SW, SE")]
     public Sprite[] facingSprites;
 
+    // internal state to avoid tiny jitter when mouse hasn't really moved
+    Vector3 lastWorldPoint = Vector3.positiveInfinity;
+    [Header("Pivot Options")]
+    [Tooltip("When true, the aim transform will be positioned on a pivot circle around the player at `pivotDistance`.")]
+    public bool pivotAroundPlayer = true;
+    [Tooltip("Distance from the player pivot where the aimTransform will be placed when pivoting.")]
+    public float pivotDistance = 1.5f;
+
     // Update is called once per frame
     void Update()
     {
@@ -43,7 +51,41 @@ public class PlayerAimController : MonoBehaviour
         if (aimTransform != null)
         {
             Quaternion rot = Quaternion.LookRotation(flatDir.normalized, Vector3.up);
-            aimTransform.rotation = rot;
+
+            // Avoid updating when the computed world point is effectively unchanged (prevents tiny jitter/drift)
+            if ((lastWorldPoint - worldPoint).sqrMagnitude > 0.000001f)
+            {
+                // If pivoting is enabled, position the aim transform on a circle around the player
+                if (pivotAroundPlayer)
+                {
+                    Vector3 pivotPos = transform.position;
+                    Vector3 targetWorldPos = pivotPos + flatDir.normalized * pivotDistance;
+
+                    // If the aimTransform is a child of the player root, set localPosition so it orbits correctly
+                    if (aimTransform.parent == transform)
+                    {
+                        // Compute local position relative to player
+                        Vector3 local = transform.InverseTransformPoint(targetWorldPos);
+                        aimTransform.localPosition = local;
+                        // Ensure the aim faces outward (+Z local)
+                        aimTransform.localRotation = Quaternion.LookRotation(flatDir.normalized, Vector3.up);
+                    }
+                    else
+                    {
+                        // Not parented: set world position directly and orient forward
+                        aimTransform.position = targetWorldPos;
+                        aimTransform.forward = flatDir.normalized;
+                    }
+                }
+                else
+                {
+                    // Snap directly to aim direction (instant)
+                    // Use forward assignment to ensure the transform's local +Z faces the target (yaw updates correctly)
+                    aimTransform.forward = flatDir.normalized;
+                }
+
+                lastWorldPoint = worldPoint;
+            }
         }
 
         // Determine quadrant: NW (0), NE (1), SW (2), SE (3)

@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
 
     [HideInInspector] public Transform Player;
     private Rigidbody rb;
+    private float frozenUntil = 0f;
 
     private void Awake()
     {
@@ -37,7 +38,6 @@ public class Enemy : MonoBehaviour
             GameObject p = GameObject.FindGameObjectWithTag("Player");
             if (p != null) Player = p.transform;
         }
-        GameManager.Instance.RegisterEnemy();
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterEnemy();
     }
@@ -45,6 +45,13 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         if (Player == null || HP <= 0) return;
+
+        if (Time.time < frozenUntil)
+        {
+            // Frozen: zero velocity and skip movement
+            rb.velocity = Vector3.zero;
+            return;
+        }
 
         Vector3 direction = (Player.position - transform.position).normalized;
 
@@ -91,5 +98,15 @@ public class Enemy : MonoBehaviour
     {
         if (GameManager.Instance != null)
             GameManager.Instance.UnregisterEnemy();
+    }
+
+    /// <summary>
+    /// Freeze this enemy's movement for a duration (seconds).
+    /// Used during room transitions to prevent movement until fade-in is complete.
+    /// </summary>
+    public void FreezeMovement(float seconds)
+    {
+        frozenUntil = Time.time + seconds;
+        rb.velocity = Vector3.zero;
     }
 }

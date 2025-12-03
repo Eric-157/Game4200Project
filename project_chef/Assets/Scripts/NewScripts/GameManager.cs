@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     private GameObject currentRoomInstance;
 
     // enemy tracking
-    private int enemiesAlive = 0;
+    public int enemiesAlive = 0;
 
     [Header("Transition")]
     [Tooltip("How close the player must be to the SpawnPoint before fading back in")]
@@ -77,6 +77,14 @@ public class GameManager : MonoBehaviour
         currentRoomInstance.name = "Room";
 
         currentRoomID = 0;
+
+        // Freeze enemies during initial spawn
+        var enemies = currentRoomInstance.GetComponentsInChildren<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+                enemy.FreezeMovement(0.5f);  // brief freeze on spawn
+        }
 
         // Use coroutine to delay spawn move by 1 frame so room hierarchy is fully initialized
         StartCoroutine(MovePlayerToSpawnDelayed());
@@ -224,6 +232,14 @@ public class GameManager : MonoBehaviour
         currentRoomID = index;
         roomsVisited++;
 
+        // Freeze all enemies immediately after room spawn so they don't move during fade-in
+        var enemies = currentRoomInstance.GetComponentsInChildren<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+                enemy.FreezeMovement(ScreenFader.Instance != null ? ScreenFader.Instance.fadeDuration + 0.1f : 0.5f);
+        }
+
         // Refresh camera bounds now that room exists
         var camBounds = FindObjectOfType<CameraController>();
         if (camBounds != null) camBounds.RefreshBounds();
@@ -267,6 +283,30 @@ public class GameManager : MonoBehaviour
         {
             ScreenFader.Instance.FadeFromBlack();
             yield return new WaitForSeconds(ScreenFader.Instance.fadeDuration + 0.05f);
+        }
+
+        // Unfreeze all enemies now that the fade-in is complete
+        FreezeAllEnemiesInCurrentRoom(0f);
+    }
+
+    /// <summary>
+    /// Freeze or unfreeze all enemies in the current room.
+    /// Called after player spawn to prevent enemies from moving during the fade-in.
+    /// </summary>
+    private void FreezeAllEnemiesInCurrentRoom(float freezeDuration)
+    {
+        if (currentRoomInstance == null) return;
+
+        var enemies = currentRoomInstance.GetComponentsInChildren<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+            {
+                if (freezeDuration > 0f)
+                    enemy.FreezeMovement(freezeDuration);
+                else
+                    enemy.FreezeMovement(0f);  // unfreeze by setting duration to 0
+            }
         }
     }
 

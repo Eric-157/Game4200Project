@@ -20,6 +20,11 @@ public class DoorTrigger : MonoBehaviour
             // For testing: reload current room
             if (gm != null)
             {
+                // since this is a debug, destroy all enemies then reload
+                foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+                {
+                    Destroy(enemy);
+                }
                 gm.TransitionToRoom(gm.currentRoomID);
             }
         }
