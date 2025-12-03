@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour
     public string EnemyName = "DefaultEnemy";
     public SpriteRenderer SpriteRenderer;
 
+    private GameManager gameManager;
+
     [Header("Stats")]
     public int HP = 3;
     public float MoveSpeed = 3f;
@@ -29,6 +31,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        gameManager = GameManager.Instance;
     }
 
     private void Start()
@@ -98,6 +101,7 @@ public class Enemy : MonoBehaviour
     {
         if (GameManager.Instance != null)
             GameManager.Instance.UnregisterEnemy();
+        gameManager.ingredients += Random.Range(1, 3); // Example: add 1-2 ingredients on enemy death
     }
 
     /// <summary>

@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/EricStuff.unity
-    guid: 31d3d28d0a48d47459fac6273176ce78
+    path: Assets/Scenes/GameScene.unity
+    guid: 79ed9e133f285814084ee2138701ffe2
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 072c185dfb14ad542b5fc476633bf8ea,
       type: 2}

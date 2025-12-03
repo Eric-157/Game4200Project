@@ -19,10 +19,15 @@ public class GameManager : MonoBehaviour
     [Header("Player")]
     [Tooltip("Optional: drag the player transform here. If empty, the player will be found by tag 'Player'.")]
     public Transform player;
+    [Header("Startup")]
+    [Tooltip("If true the GameManager will auto-generate the tutorial/first room on Start. If false, call StartGame() to begin from UI.")]
+    public bool autoGenerateOnStart = false;
 
     // public state
     public int currentRoomID { get; private set; } = -1; // -1 = no room, 0 = tutorial (if used)
     public int roomsVisited { get; private set; } = 0;
+
+    public int ingredients = 0;
 
     // internal
     private GameObject currentRoomInstance;
@@ -59,10 +64,34 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (autoGenerateOnStart)
+        {
+            if (tutorialRoomPrefab != null && roomSpawnPoint != null)
+            {
+                GenerateTutorialRoom();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Called from the UI/Main menu to begin the game (generate the initial room).
+    /// </summary>
+    public void StartGame()
+    {
+        // If a tutorial room is provided spawn that, otherwise spawn the first room prefab
         if (tutorialRoomPrefab != null && roomSpawnPoint != null)
         {
             GenerateTutorialRoom();
+            return;
         }
+
+        if (roomPrefabs != null && roomPrefabs.Count > 0)
+        {
+            GenerateRoomByIndex(0);
+            return;
+        }
+
+        Debug.LogWarning("GameManager.StartGame: no room prefabs or tutorial room available to spawn.");
     }
 
     public void GenerateTutorialRoom()
@@ -338,4 +367,33 @@ public class GameManager : MonoBehaviour
 
     public GameObject GetCurrentRoomRoot() => currentRoomInstance;
     public int GetEnemiesAlive() => enemiesAlive;
+
+    /// <summary>
+    /// Return to the main-menu UI within this scene. This destroys the current room instance
+    /// but does NOT spawn a new room. Intended for Pause->Main Menu flow inside a single scene.
+    /// </summary>
+    public void ReturnToMainMenu()
+    {
+        if (currentRoomInstance != null)
+        {
+            Destroy(currentRoomInstance);
+            foreach (var enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+            {
+                Destroy(enemy);
+            }
+            currentRoomInstance = null;
+        }
+
+        currentRoomID = -1;
+        roomsVisited = 0;
+        enemiesAlive = 0;
+
+        // Refresh camera bounds so camera doesn't try to clamp to a destroyed room
+        var camBounds = FindObjectOfType<CameraController>();
+        if (camBounds != null)
+        {
+            camBounds.RefreshBounds();
+            camBounds.SetPlayer(player);
+        }
+    }
 }
