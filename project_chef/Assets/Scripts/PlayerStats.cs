@@ -28,7 +28,7 @@ public class PlayerStats : MonoBehaviour
     public int tempDefense = 0;       // temporary (used first)
     public float moveSpeed = 5f;
     public float attackSpeed = 0f;    // modifies cooldown
-    public float damage = 1f;
+    public float damage = 0f;
     public int critChance = 100;      // 1/X chance
     public float critDamage = 1f;
     [Header("Damage / Invulnerability")]
@@ -51,10 +51,66 @@ public class PlayerStats : MonoBehaviour
 
     private string savePath => Path.Combine(Application.persistentDataPath, "player_stats.json");
 
+    // Stored copies of fields as they were in the inspector / before any runtime upgrades
+    private int defaultStartHP;
+    private int defaultMaxHP;
+    private int defaultCurrentHP;
+    private int defaultDefense;
+    private int defaultTempDefense;
+    private float defaultMoveSpeed;
+    private float defaultAttackSpeed;
+    private float defaultDamage;
+    private int defaultCritChance;
+    private float defaultCritDamage;
+    private List<StatModifier> defaultPassiveModifiers;
+
+    void Awake()
+    {
+        // Capture the serialized/inspector defaults so we can restore them on reset
+        defaultStartHP = startHP;
+        defaultMaxHP = maxHP;
+        defaultCurrentHP = currentHP;
+        defaultDefense = defense;
+        defaultTempDefense = tempDefense;
+        defaultMoveSpeed = moveSpeed;
+        defaultAttackSpeed = attackSpeed;
+        defaultDamage = damage;
+        defaultCritChance = critChance;
+        defaultCritDamage = critDamage;
+        defaultPassiveModifiers = new List<StatModifier>(passiveModifiers);
+    }
+
     void Start()
     {
         LoadStats();
         ApplyModifiers();
+
+        // Ensure the configured start HP and current HP reflect the (possibly modified)
+        // maxHP at the start of a run. This makes upgrades that change maxHP take
+        // effect immediately and guarantees the player starts with full health.
+        startHP = maxHP;
+        currentHP = maxHP;
+    }
+
+    /// <summary>
+    /// Restore player stats to the captured defaults (as serialized in the inspector)
+    /// and persist them to disk. Used by UpgradeManager reset.
+    /// </summary>
+    public void ResetToDefaults()
+    {
+        startHP = defaultStartHP;
+        maxHP = defaultMaxHP;
+        currentHP = defaultCurrentHP;
+        defense = defaultDefense;
+        tempDefense = defaultTempDefense;
+        moveSpeed = defaultMoveSpeed;
+        attackSpeed = defaultAttackSpeed;
+        damage = defaultDamage;
+        critChance = defaultCritChance;
+        critDamage = defaultCritDamage;
+        passiveModifiers = new List<StatModifier>(defaultPassiveModifiers);
+
+        SaveStats();
     }
 
     // ========== CORE STATS ==========

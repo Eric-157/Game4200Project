@@ -55,8 +55,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.4340096, y: 2.2182174, z: 0.27024937}
-  m_Center: {x: 0.023352146, y: 0.040150642, z: 0.007867336}
+  m_Size: {x: 2.0333035, y: 2.2182174, z: 0.42005444}
+  m_Center: {x: -0.034008622, y: 0.040150642, z: 0.011021137}
 --- !u!54 &-1674909582154628379
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -79,7 +79,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 32
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyName: DefaultEnemy
-  SpriteRenderer: {fileID: 0}
+  SpriteRenderer: {fileID: -8816822110680145917}
   HP: 3
   MoveSpeed: 3
   AttackSpeed: 1
@@ -147,8 +147,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 218e9ddd5a7495f4c85f31c97cbff117, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 58cbd0ba6c314184a940ccddcab548bd, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

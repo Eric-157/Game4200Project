@@ -133,12 +133,7 @@ public class GameManager : MonoBehaviour
                 enemy.FreezeMovement(0.5f);  // brief freeze on spawn
         }
 
-        // Apply scaling to enemies based on roomsVisited (every 10 rooms -> multiplier increases)
-        foreach (var enemy in enemies)
-        {
-            if (enemy != null)
-                enemy.ScaleForRoom(roomsVisited);
-        }
+        // Enemies will scale themselves on creation; no need to scale here.
 
         // Use coroutine to delay spawn move by 1 frame so room hierarchy is fully initialized
         StartCoroutine(MovePlayerToSpawnDelayed());
@@ -165,11 +160,11 @@ public class GameManager : MonoBehaviour
             Destroy(currentRoomInstance);
 
         Debug.Log("[GameManager] Spawning room " + index + " at " + roomSpawnPoint.position);
+        currentRoomID = index;
+        roomsVisited++; // Increment roomsVisited before instantiating so enemies can scale themselves on creation
+        Debug.Log($"[GameManager] GenerateRoomByIndex: roomsVisited incremented to {roomsVisited}");
         currentRoomInstance = Instantiate(roomPrefabs[index], roomSpawnPoint.position, roomSpawnPoint.rotation, null);
         currentRoomInstance.name = "Room";
-
-        currentRoomID = index;
-        roomsVisited++;
 
         // Use coroutine to delay spawn move by 1 frame so room hierarchy is fully initialized
         StartCoroutine(MovePlayerToSpawnDelayed());
@@ -178,13 +173,7 @@ public class GameManager : MonoBehaviour
         var camBounds = FindObjectOfType<CameraController>();
         if (camBounds != null) camBounds.RefreshBounds();
         if (camBounds != null) camBounds.SetPlayer(player);
-        // Apply scaling to enemies for this room (if any)
-        var enemies = currentRoomInstance.GetComponentsInChildren<Enemy>();
-        foreach (var enemy in enemies)
-        {
-            if (enemy != null)
-                enemy.ScaleForRoom(roomsVisited);
-        }
+        // Enemies will scale themselves on creation; no need to scale here.
         // If there are no enemies in this room, unlock doors immediately
         if (enemiesAlive == 0)
         {
@@ -294,12 +283,13 @@ public class GameManager : MonoBehaviour
             Destroy(currentRoomInstance);
 
         Debug.Log("[GameManager] Transition: spawning room " + index + " at " + roomSpawnPoint.position);
-        currentRoomInstance = Instantiate(roomPrefabs[index], roomSpawnPoint.position, roomSpawnPoint.rotation, null);
-        currentRoomInstance.name = "Room";
-
         currentRoomID = index;
         if (incrementRoomsVisited)
-            roomsVisited++;
+            roomsVisited++; // increment before instantiate so enemies see correct roomsVisited in Awake/Start
+        Debug.Log($"[GameManager] RoomTransitionWithFade: incrementRoomsVisited={incrementRoomsVisited}, roomsVisited now={roomsVisited}");
+
+        currentRoomInstance = Instantiate(roomPrefabs[index], roomSpawnPoint.position, roomSpawnPoint.rotation, null);
+        currentRoomInstance.name = "Room";
 
         // Freeze all enemies immediately after room spawn so they don't move during fade-in
         var enemies = currentRoomInstance.GetComponentsInChildren<Enemy>();
@@ -307,13 +297,6 @@ public class GameManager : MonoBehaviour
         {
             if (enemy != null)
                 enemy.FreezeMovement(ScreenFader.Instance != null ? ScreenFader.Instance.fadeDuration + 0.1f : 0.5f);
-        }
-
-        // Apply scaling to enemies based on roomsVisited (every 10 rooms -> multiplier increases)
-        foreach (var enemy in enemies)
-        {
-            if (enemy != null)
-                enemy.ScaleForRoom(roomsVisited);
         }
 
         // Refresh camera bounds now that room exists
@@ -364,6 +347,8 @@ public class GameManager : MonoBehaviour
         // Unfreeze all enemies now that the fade-in is complete
         FreezeAllEnemiesInCurrentRoom(0f);
 
+        // Enemies will have scaled themselves on creation; no additional scaling required here.
+
         // transition finished
         isTransitioning = false;
     }
@@ -388,6 +373,8 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    // Removed ScaleEnemiesNextFrame: enemies now scale themselves during their Start/Awake
 
     public void RegisterEnemy()
     {

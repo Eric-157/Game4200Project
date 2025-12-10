@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 9059024010931111403}
   - component: {fileID: 2180543092214442187}
   - component: {fileID: 1236327849684429234}
+  - component: {fileID: 8668207991302036382}
   - component: {fileID: 744686421584760875}
-  - component: {fileID: 3963798452474360219}
   m_Layer: 0
   m_Name: ProjectileMelee
   m_TagString: Untagged
@@ -107,6 +107,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8668207991302036382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7628665473494181445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d30d16fb18d655d47b36d79fe734931a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  lifetime: 0.1
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  destroyOnHit: 1
 --- !u!54 &744686421584760875
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -134,20 +152,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3963798452474360219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7628665473494181445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6c0e9559edc5cb45818e290987506dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 3
-  lifetime: 0.1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 128

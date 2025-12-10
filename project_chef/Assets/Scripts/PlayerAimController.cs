@@ -20,8 +20,10 @@ public class PlayerAimController : MonoBehaviour
     public Animator animator;
     public string facingParam = "Facing"; // int param 0..3
     public SpriteRenderer spriteRenderer;
-    [Tooltip("Optional sprites in order: NW, NE, SW, SE")]
+    [Tooltip("Optional sprites. If using diagonal sprites set Use Cardinal Sprites = false and order: NW, NE, SW, SE. If using cardinal sprites set Use Cardinal Sprites = true and order: N, E, S, W.")]
     public Sprite[] facingSprites;
+    [Tooltip("When true, `facingSprites` are treated as cardinal (N, E, S, W). When false, they are treated as diagonals (NW, NE, SW, SE).")]
+    public bool useCardinalSprites = true;
 
     // internal state to avoid tiny jitter when mouse hasn't really moved
     Vector3 lastWorldPoint = Vector3.positiveInfinity;
@@ -88,25 +90,80 @@ public class PlayerAimController : MonoBehaviour
             }
         }
 
-        // Determine quadrant: NW (0), NE (1), SW (2), SE (3)
-        int quad = 0;
-        bool north = flatDir.z >= 0f;
-        bool east = flatDir.x >= 0f;
-        if (north && !east) quad = 0; // NW
-        else if (north && east) quad = 1; // NE
-        else if (!north && !east) quad = 2; // SW
-        else quad = 3; // SE
+        // Determine facing based on dominant axis so we can support cardinal (N/E/S/W)
+        bool north = flatDir.z > 0f;
+        bool east = flatDir.x > 0f;
+        int animatorFacing = 0; // integer param for animator (0..3) maps to either diagonal or cardinal depending on animator setup
+        int spriteIndex = 0; // index into facingSprites
+
+        float absX = Mathf.Abs(flatDir.x);
+        float absZ = Mathf.Abs(flatDir.z);
+
+        if (absX > absZ)
+        {
+            // Horizontal dominant -> East or West. Choose diagonal sprite based on the Z sign (north vs south).
+            if (east)
+            {
+                if (useCardinalSprites)
+                {
+                    animatorFacing = 1; // East
+                    spriteIndex = 1;
+                }
+                else
+                {
+                    // Diagonal: NE if north, SE if south
+                    spriteIndex = north ? 1 : 3;
+                    animatorFacing = spriteIndex;
+                }
+            }
+            else
+            {
+                if (useCardinalSprites)
+                {
+                    animatorFacing = 3; // West
+                    spriteIndex = 3;
+                }
+                else
+                {
+                    // Diagonal: NW if north, SW if south
+                    spriteIndex = north ? 0 : 2;
+                    animatorFacing = spriteIndex;
+                }
+            }
+        }
+        else
+        {
+            // Vertical dominant -> North or South
+            if (north)
+            {
+                animatorFacing = 0;
+                spriteIndex = 0; // North (or NW for diagonal ordering)
+            }
+            else
+            {
+                animatorFacing = 2;
+                spriteIndex = 2; // South (or SW for diagonal ordering)
+            }
+        }
 
         // Set animator param if present
         if (animator != null)
         {
-            animator.SetInteger(facingParam, quad);
+            animator.SetInteger(facingParam, animatorFacing);
         }
         else if (spriteRenderer != null && facingSprites != null && facingSprites.Length >= 4)
         {
-            spriteRenderer.sprite = facingSprites[quad];
-            // Optionally flip horizontally for left-side sprites if your assets expect it
-            spriteRenderer.flipX = (quad == 0 || quad == 2);
+            spriteRenderer.sprite = facingSprites[spriteIndex];
+            if (useCardinalSprites)
+            {
+                // cardinal ordering N,E,S,W: flip when facing west
+                spriteRenderer.flipX = (spriteIndex == 3);
+            }
+            else
+            {
+                // diagonal ordering NW,NE,SW,SE: do not flip; sprites should include both left and right variants
+                spriteRenderer.flipX = false;
+            }
         }
         else if (spriteRenderer != null)
         {

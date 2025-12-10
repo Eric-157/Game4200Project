@@ -45,10 +45,17 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void ScaleForRoom(int roomsVisited)
     {
-        if (roomsVisited <= 0) return;
+        if (roomsVisited <= 0)
+        {
+            Debug.Log($"[Enemy {EnemyName}] ScaleForRoom: skipping (roomsVisited={roomsVisited})");
+            return;
+        }
         int multiplier = 1 + ((roomsVisited - 1) / 10); // 1.., rooms 1-10 =>1, 11-20=>2, etc.
-        HP = Mathf.Max(1, Mathf.RoundToInt(baseHP * multiplier));
-        Damage = Mathf.Max(0.1f, baseDamage * multiplier);
+        int newHP = Mathf.Max(1, Mathf.RoundToInt(baseHP * multiplier));
+        float newDamage = Mathf.Max(0.1f, baseDamage * multiplier);
+        Debug.Log($"[Enemy {EnemyName}] ScaleForRoom: roomsVisited={roomsVisited}, multiplier={multiplier}, HP: {baseHP}->{newHP}, Damage: {baseDamage}->{newDamage}");
+        HP = newHP;
+        Damage = newDamage;
     }
 
     private void Start()
@@ -60,6 +67,12 @@ public class Enemy : MonoBehaviour
         }
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterEnemy();
+        // Let the enemy scale itself based on the current roomsVisited value
+        if (GameManager.Instance != null)
+        {
+            int rooms = GameManager.Instance.roomsVisited;
+            ScaleForRoom(rooms);
+        }
     }
 
     private void FixedUpdate()
