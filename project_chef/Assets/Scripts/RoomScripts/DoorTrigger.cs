@@ -25,11 +25,14 @@ public class DoorTrigger : MonoBehaviour
                 {
                     Destroy(enemy);
                 }
-                gm.TransitionToRoom(gm.currentRoomID);
+                gm.enemiesAlive = 0;
+                // Reload without incrementing roomsVisited
+                gm.TransitionToRoom(gm.currentRoomID, false);
             }
         }
 
-        if (!playerInRange || shouldBeLocked)
+        // Also ignore input while a room transition is in progress
+        if (!playerInRange || shouldBeLocked || (gm != null && gm.isTransitioning))
             return;
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -39,7 +42,8 @@ public class DoorTrigger : MonoBehaviour
             // Use GameManager's fade transition instead of direct room generation
             if (gm != null)
             {
-                gm.TransitionToRoom(desiredRoomID);
+                // Start transition; GameManager.isTransitioning prevents further input until done
+                gm.TransitionToRoom(desiredRoomID, true);
             }
         }
 

@@ -31,6 +31,20 @@ public class PlayerStats : MonoBehaviour
     public float damage = 1f;
     public int critChance = 100;      // 1/X chance
     public float critDamage = 1f;
+    [Header("Damage / Invulnerability")]
+    [Tooltip("Seconds of invulnerability after taking damage")]
+    public float invulnerabilityDuration = 1.0f;
+    private float invulnerableUntil = 0f;
+    // frame index when we last applied damage to the player; prevents multiple
+    // damage events from different enemies in the exact same frame.
+    private int lastDamageFrame = -1;
+
+    [Header("Hit Flash")]
+    [Tooltip("Color to flash the player when hit")]
+    public Color hitColor = Color.red;
+    [Tooltip("Duration of the hit flash in seconds")]
+    public float hitFlashDuration = 0.15f;
+    private Coroutine hitFlashCoroutine = null;
 
     [Header("Passive Item System")]
     public List<StatModifier> passiveModifiers = new();
@@ -46,9 +60,78 @@ public class PlayerStats : MonoBehaviour
     // ========== CORE STATS ==========
     public void TakeDamage(float dmg)
     {
+        // Ignore damage when currently invulnerable
+        if (Time.time < invulnerableUntil) return;
+
+        // Prevent multiple damage sources from applying in the same frame.
+        // This ensures only one enemy hit goes through even if two collisions
+        // are processed during the same physics/frame update.
+        if (Time.frameCount == lastDamageFrame) return;
+
         float finalDamage = CalculateDamageTaken(dmg);
-        currentHP -= Mathf.RoundToInt(finalDamage);
+        int dmgInt = Mathf.RoundToInt(finalDamage);
+        currentHP -= dmgInt;
+
+        // Mark damage applied on this frame so other sources in the same
+        // frame won't also apply damage.
+        lastDamageFrame = Time.frameCount;
+
+        // Set invulnerability window
+        invulnerableUntil = Time.time + invulnerabilityDuration;
+
+        // Trigger hit flash effect
+        if (dmgInt > 0)
+        {
+            StartHitFlash();
+        }
+
         if (currentHP <= 0) PlayerDeath();
+    }
+
+    void StartHitFlash()
+    {
+        if (hitFlashCoroutine != null)
+        {
+            StopCoroutine(hitFlashCoroutine);
+            RestoreSpriteColors();
+        }
+        hitFlashCoroutine = StartCoroutine(HitFlashCoroutine());
+    }
+
+    private SpriteRenderer[] cachedRenderers = null;
+    private Color[] originalColors = null;
+
+    System.Collections.IEnumerator HitFlashCoroutine()
+    {
+        if (cachedRenderers == null)
+            cachedRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        if (cachedRenderers == null || cachedRenderers.Length == 0)
+            yield break;
+
+        // Cache originals
+        originalColors = new Color[cachedRenderers.Length];
+        for (int i = 0; i < cachedRenderers.Length; i++)
+        {
+            originalColors[i] = cachedRenderers[i].color;
+            cachedRenderers[i].color = hitColor;
+        }
+
+        yield return new WaitForSeconds(hitFlashDuration);
+
+        RestoreSpriteColors();
+        hitFlashCoroutine = null;
+    }
+
+    void RestoreSpriteColors()
+    {
+        if (cachedRenderers == null || originalColors == null) return;
+        int len = Mathf.Min(cachedRenderers.Length, originalColors.Length);
+        for (int i = 0; i < len; i++)
+        {
+            if (cachedRenderers[i] != null)
+                cachedRenderers[i].color = originalColors[i];
+        }
     }
 
     float CalculateDamageTaken(float dmg)
@@ -98,6 +181,24 @@ public class PlayerStats : MonoBehaviour
     {
         Debug.Log("Player died!");
         currentHP = 0;
+        // Pause the game and show death UI if present
+        if (PauseManager.Instance != null)
+            PauseManager.Instance.Pause();
+
+        var gm = GameObject.FindObjectOfType<GameManager>();
+        if (gm != null)
+        {
+            // notify GameManager (it will destroy room and prepare main menu if needed)
+            // Expose a hook; GameManager can implement showing a death UI
+            // For now just call ReturnToMainMenu when user chooses from death UI
+        }
+        // Freeze player input/movement
+        var pm = GetComponent<PlayerMovement>();
+        if (pm != null) pm.FreezeMovement(99999f);
+
+        // Show death UI if present
+        var deathUI = GameObject.FindObjectOfType<DeathMenuUI>();
+        if (deathUI != null) deathUI.Show();
     }
 
     // ========== PASSIVE MODIFIERS ==========

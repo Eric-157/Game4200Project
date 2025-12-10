@@ -16,7 +16,11 @@ public class MeleeAttack : EnemyCombatBase
         if (distance <= range)
         {
             Debug.Log($"{enemy.EnemyName} attacks player for {enemy.Damage} damage!");
-            // TODO: Apply damage to player here
+            var ps = enemy.Player.GetComponent<PlayerStats>();
+            if (ps != null)
+            {
+                ps.TakeDamage(enemy.Damage);
+            }
             enemy.StartCoroutine(AttackCooldown());
         }
     }

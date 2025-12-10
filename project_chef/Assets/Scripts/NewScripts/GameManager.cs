@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
 
     // enemy tracking
     public int enemiesAlive = 0;
+    // whether a room transition is in progress (used to block input like E)
+    public bool isTransitioning = false;
 
     [Header("Transition")]
     [Tooltip("How close the player must be to the SpawnPoint before fading back in")]
@@ -78,6 +80,22 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
+        // Reset player runtime state for a new run (preserve persistent ingredients)
+        if (player != null)
+        {
+            var ps = player.GetComponent<PlayerStats>();
+            if (ps != null)
+            {
+                ps.LoadStats();
+                ps.currentHP = ps.maxHP;
+            }
+            var pm = player.GetComponent<PlayerMovement>();
+            if (pm != null)
+            {
+                pm.FreezeMovement(0f); // ensure not frozen
+            }
+        }
+
         // If a tutorial room is provided spawn that, otherwise spawn the first room prefab
         if (tutorialRoomPrefab != null && roomSpawnPoint != null)
         {
@@ -113,6 +131,13 @@ public class GameManager : MonoBehaviour
         {
             if (enemy != null)
                 enemy.FreezeMovement(0.5f);  // brief freeze on spawn
+        }
+
+        // Apply scaling to enemies based on roomsVisited (every 10 rooms -> multiplier increases)
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+                enemy.ScaleForRoom(roomsVisited);
         }
 
         // Use coroutine to delay spawn move by 1 frame so room hierarchy is fully initialized
@@ -153,6 +178,13 @@ public class GameManager : MonoBehaviour
         var camBounds = FindObjectOfType<CameraController>();
         if (camBounds != null) camBounds.RefreshBounds();
         if (camBounds != null) camBounds.SetPlayer(player);
+        // Apply scaling to enemies for this room (if any)
+        var enemies = currentRoomInstance.GetComponentsInChildren<Enemy>();
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+                enemy.ScaleForRoom(roomsVisited);
+        }
         // If there are no enemies in this room, unlock doors immediately
         if (enemiesAlive == 0)
         {
@@ -226,11 +258,18 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void TransitionToRoom(int index)
     {
-        StartCoroutine(RoomTransitionWithFade(index));
+        StartCoroutine(RoomTransitionWithFade(index, true));
     }
 
-    private IEnumerator RoomTransitionWithFade(int index)
+    public void TransitionToRoom(int index, bool incrementRoomsVisited)
     {
+        StartCoroutine(RoomTransitionWithFade(index, incrementRoomsVisited));
+    }
+
+    private IEnumerator RoomTransitionWithFade(int index, bool incrementRoomsVisited)
+    {
+        // mark transitioning so inputs like 'E' are ignored
+        isTransitioning = true;
         // Fade out if a fader is present
         if (ScreenFader.Instance != null)
         {
@@ -259,7 +298,8 @@ public class GameManager : MonoBehaviour
         currentRoomInstance.name = "Room";
 
         currentRoomID = index;
-        roomsVisited++;
+        if (incrementRoomsVisited)
+            roomsVisited++;
 
         // Freeze all enemies immediately after room spawn so they don't move during fade-in
         var enemies = currentRoomInstance.GetComponentsInChildren<Enemy>();
@@ -267,6 +307,13 @@ public class GameManager : MonoBehaviour
         {
             if (enemy != null)
                 enemy.FreezeMovement(ScreenFader.Instance != null ? ScreenFader.Instance.fadeDuration + 0.1f : 0.5f);
+        }
+
+        // Apply scaling to enemies based on roomsVisited (every 10 rooms -> multiplier increases)
+        foreach (var enemy in enemies)
+        {
+            if (enemy != null)
+                enemy.ScaleForRoom(roomsVisited);
         }
 
         // Refresh camera bounds now that room exists
@@ -316,6 +363,9 @@ public class GameManager : MonoBehaviour
 
         // Unfreeze all enemies now that the fade-in is complete
         FreezeAllEnemiesInCurrentRoom(0f);
+
+        // transition finished
+        isTransitioning = false;
     }
 
     /// <summary>

@@ -28,9 +28,38 @@ public class PauseMenuUI : MonoBehaviour
 
     private void Update()
     {
-        // Show/hide pause menu based on pause state
-        if (pauseMenuPanel != null)
-            pauseMenuPanel.SetActive(PauseManager.Instance.IsPaused);
+        // Only show the pause menu when the game is paused AND the player is alive.
+        if (pauseMenuPanel != null && PauseManager.Instance != null)
+        {
+            bool isPaused = PauseManager.Instance.IsPaused;
+
+            // determine whether the player is alive
+            var ps = FindObjectOfType<PlayerStats>();
+            bool playerAlive = ps.currentHP > 0;
+
+            pauseMenuPanel.SetActive(isPaused && playerAlive);
+
+            // Only accept pause-menu related hotkeys when the game is paused and the player is alive
+            if (isPaused && playerAlive)
+            {
+                // Respect PauseManager's toggle debounce to avoid immediate resume from the same keypress
+                bool allowedByDebounce = Time.unscaledTime - PauseManager.Instance.lastToggleTime >= PauseManager.Instance.toggleDebounce;
+                if (!allowedByDebounce) return;
+
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    OnReturnToMenuClicked();
+                }
+                else if (Input.GetKeyDown(KeyCode.M))
+                {
+                    OnExitGameClicked();
+                }
+                else if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    OnResumeClicked();
+                }
+            }
+        }
     }
 
     public void OnResumeClicked()

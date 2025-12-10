@@ -27,11 +27,28 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public Transform Player;
     private Rigidbody rb;
     private float frozenUntil = 0f;
+    // store base stats so scaling can be applied idempotently
+    private int baseHP;
+    private float baseDamage;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         gameManager = GameManager.Instance;
+        baseHP = HP;
+        baseDamage = Damage;
+    }
+
+    /// <summary>
+    /// Scale enemy stats based on which room we're in. Every 10 rooms increases multiplier.
+    /// roomsVisited: total rooms visited counter from GameManager (1-based count of rooms generated)
+    /// </summary>
+    public void ScaleForRoom(int roomsVisited)
+    {
+        if (roomsVisited <= 0) return;
+        int multiplier = 1 + ((roomsVisited - 1) / 10); // 1.., rooms 1-10 =>1, 11-20=>2, etc.
+        HP = Mathf.Max(1, Mathf.RoundToInt(baseHP * multiplier));
+        Damage = Mathf.Max(0.1f, baseDamage * multiplier);
     }
 
     private void Start()
@@ -87,21 +104,54 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         rb.velocity = Vector3.zero;
+        // Calculate ingredient drop scaled by difficulty multiplier (every 10 rooms increases multiplier)
+        int baseDrop = Random.Range(0, 3); // keep existing base randomness (0..2)
+        int multiplier = 1;
+        if (GameManager.Instance != null)
+        {
+            int rooms = GameManager.Instance.roomsVisited;
+            if (rooms > 0) multiplier = 1 + ((rooms - 1) / 10);
+        }
+        int totalDrop = baseDrop * multiplier;
+        if (gameManager != null)
+            gameManager.ingredients += totalDrop;
         if (GameManager.Instance != null)
             GameManager.Instance.UnregisterEnemy();
         Destroy(gameObject);
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            var ps = collision.collider.GetComponent<PlayerStats>();
+            if (ps != null)
+            {
+                // Apply damage; PlayerStats handles invulnerability
+                ps.TakeDamage(Damage);
+            }
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        // While colliding with the player, attempt to apply damage each physics step.
+        // PlayerStats will ignore damage if the player is currently invulnerable,
+        // so this allows damage to apply again once the invulnerability window ends
+        // without requiring the player to exit and re-enter collision.
+        if (collision.collider.CompareTag("Player"))
+        {
+            var ps = collision.collider.GetComponent<PlayerStats>();
+            if (ps != null)
+            {
+                ps.TakeDamage(Damage);
+            }
+        }
+    }
+
     public void Attack()
     {
         Combat?.ExecuteAttack(this);
-    }
-
-    private void OnDestroy()
-    {
-        if (GameManager.Instance != null)
-            GameManager.Instance.UnregisterEnemy();
-        gameManager.ingredients += Random.Range(1, 3); // Example: add 1-2 ingredients on enemy death
     }
 
     /// <summary>
