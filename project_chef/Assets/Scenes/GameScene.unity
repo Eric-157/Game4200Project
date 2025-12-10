@@ -4627,6 +4627,8 @@ MonoBehaviour:
   - {fileID: 1204997955627570618, guid: 642fb4342a22ef745be3ff2e81c7f09b, type: 3}
   - {fileID: 5884083830994718349, guid: e2cae04054a2a114ea8d6b0f16ed605f, type: 3}
   - {fileID: 5001386594969873482, guid: e60ff242c591850488f34aa97b4ed28d, type: 3}
+  - {fileID: 7340686954073341249, guid: 2bc8622c2176eba4e99b06183918c187, type: 3}
+  - {fileID: 9200198640242661782, guid: 6457ec95fc4f4764ea51c653c888349a, type: 3}
   player: {fileID: 0}
   autoGenerateOnStart: 0
   ingredients: 0
